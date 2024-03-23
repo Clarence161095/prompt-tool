@@ -51,7 +51,7 @@ const context = createContext()
 
 const setThrottleLocalStorage = (name, value) => {
   const lastTime = localStorage.getItem('lastTime')
-  if (!lastTime || Date.now() - lastTime > 500) {
+  if (!lastTime || Date.now() - lastTime > 123) {
     localStorage.setItem('lastTime', Date.now())
     localStorage.setItem(name, JSON.stringify(value))
   }
