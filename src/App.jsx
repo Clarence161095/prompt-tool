@@ -3,9 +3,9 @@ import toast, { Toaster } from 'react-hot-toast'
 import './App.css'
 
 const DATA = {
-  'Đọc báo': [
+  'Sample: Đọc báo': [
     {
-      name: 'Đọc Báo English',
+      name: 'Sample Default Data: Đọc Báo English',
       prompt: 'Đọc Báo English',
       feature: 'repeat_xxxxx1_with_clipboard',
       isEditMode: true,
@@ -17,9 +17,9 @@ const DATA = {
       isEditMode: false,
     },
   ],
-  'Viết bài': [
+  'Sample: Viết bài': [
     {
-      name: 'Đọc Báo English',
+      name: 'Sample Default Data: Đọc Báo English',
       prompt: 'Đọc Báo English',
       feature: 'repeat_xxxxx1_with_clipboard',
       isEditMode: true,
@@ -37,11 +37,55 @@ const DEFAULT_FEATURES = [
   {
     id: 'repeat_xxxxx1_with_clipboard',
     label: 'Repeat XXXXX1 with clipboard',
-    function: prompt => {
+    function: ({prompt,name}) => {
       navigator.clipboard.readText().then(value => {
         const newValue = prompt.replace('XXXXX1', value)
         navigator.clipboard.writeText(newValue)
-        toast.success('Done and Copied to clipboard')
+        toast.success(name + '\n Done and Copied to clipboard')
+      })
+    },
+  },
+  {
+    id: 'repeat_xxxxx2_with_clipboard',
+    label: 'Repeat XXXXX2 with clipboard',
+    function: ({prompt,name}) => {
+      navigator.clipboard.readText().then(value => {
+        const newValue = prompt.replace('XXXXX2', value)
+        navigator.clipboard.writeText(newValue)
+        toast.success(name + '\n Done and Copied to clipboard')
+      })
+    },
+  },
+  {
+    id: 'repeat_xxxxx3_with_clipboard',
+    label: 'Repeat XXXXX3 with clipboard',
+    function: ({prompt,name}) => {
+      navigator.clipboard.readText().then(value => {
+        const newValue = prompt.replace('XXXXX3', value)
+        navigator.clipboard.writeText(newValue)
+        toast.success(name + '\n Done and Copied to clipboard')
+      })
+    },
+  },
+  {
+    id: 'repeat_xxxxx4_with_clipboard',
+    label: 'Repeat XXXXX4 with clipboard',
+    function: ({prompt,name}) => {
+      navigator.clipboard.readText().then(value => {
+        const newValue = prompt.replace('XXXXX4', value)
+        navigator.clipboard.writeText(newValue)
+        toast.success(name + '\n Done and Copied to clipboard')
+      })
+    },
+  },
+  {
+    id: 'repeat_xxxxx5_with_clipboard',
+    label: 'Repeat XXXXX5 with clipboard',
+    function: ({prompt,name}) => {
+      navigator.clipboard.readText().then(value => {
+        const newValue = prompt.replace('XXXXX5', value)
+        navigator.clipboard.writeText(newValue)
+        toast.success(name + '\n Done and Copied to clipboard')
       })
     },
   },
@@ -80,8 +124,14 @@ function Content() {
           className="text-xs bg-[#e74c3c] px-2 py-1 rounded-md m-2"
           onClick={() => {
             if (window.confirm('Are you sure to delete this menu?')) {
-              const newData = { ...data }
+              let newData = { ...data }
               delete newData[activeMenu]
+              if(Object.keys(newData).length === 0) {
+                toast('No more menu, reset to default')
+                newData = JSON.parse(JSON.stringify(DATA))
+              } else {
+                setActiveMenu(Object.keys(newData)[0])
+              }
               set('data', newData)
               setActiveMenu(Object.keys(newData)[0])
               window.location.reload()
@@ -143,9 +193,9 @@ function Content() {
                   <div className="flex flex-col mt-1">
                     <select className="px-2 py-1 rounded-md border-2 border-[#ecf0f1] text-black mt-1">
                       {DEFAULT_FEATURES.map((item, index) => (
-                        <option key={index} value={item.id}>
-                          {item.label}
-                        </option>
+                          <option key={index} value={item.id}>
+                            {item.label}
+                          </option>
                       ))}
                     </select>
                     <textarea
@@ -175,7 +225,7 @@ function Content() {
                     const feature = DEFAULT_FEATURES.find(
                       item => item.id === thisPrompt.feature,
                     )
-                    feature.function(thisPrompt.prompt)
+                    feature.function(thisPrompt)
                   }}
                 >
                   Run
@@ -325,9 +375,9 @@ function Menu() {
 }
 
 function App() {
-  const [data, _setData] = useState(get('data', DATA))
+  const [data, _setData] = useState(get('data', JSON.parse(JSON.stringify(DATA))))
   const [activeMenu, _activeMenu] = useState(
-    get('activeMenu', data[0] || DATA[0]),
+    get('activeMenu', data[0] || JSON.parse(JSON.stringify(DATA))[0]),
   )
   const menuList = Object.keys(data)
 
